@@ -49,7 +49,7 @@ h1 {
   color: #333;
 }
 button {
-  margin-top: 80px;
+  margin-top: 100px;
   padding: 8px 18px;
   font-size: 16px;
   background-color: #007bff;
@@ -67,9 +67,13 @@ button {
   margin-top: 20px;
   text-align: center;
 }
-
+h1 {
+  font-size: 50px;
+  align-items: top;
+  color: #333;
+}
 button {
-  padding: 10px 50px;
+  padding: 10px 20px;
   margin: 10px;
   font-size: 16px;
   cursor: pointer;

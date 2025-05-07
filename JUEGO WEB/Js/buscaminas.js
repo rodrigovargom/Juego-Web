@@ -1,6 +1,6 @@
 let time;
 let timerInterval;
-
+//FireBase
 
 document.addEventListener('DOMContentLoaded', ()=>{
     const timerElement = document.querySelector('#timer');
@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
         return;
       }
 function startTimer() {
+    stopTimer(); // Detener cualquier temporizador existente
     time = 0; 
     timerInterval = setInterval(() => {
         time+=1;
@@ -23,6 +24,7 @@ function resetGame(){
     squares = [];
     isGameOver = false;
     createBoard();
+    Lost.style.display = 'none'; 
     startTimer(); // Reinicia el temporizador
 }
   const grid = document.querySelector('.grid');
@@ -37,7 +39,7 @@ function resetGame(){
     menu.style.display = 'none'; 
     game.style.display = 'block'; 
     createBoard();
-    resetGame(); // Crea el tablero
+    resetGame(); 
   });
   optionsButton.addEventListener('click', () => {
     menu.style.display = 'none'; 
@@ -46,10 +48,12 @@ function resetGame(){
   volverButton.addEventListener('click', () => {
     options.style.display = 'none'; 
     menu.style.display = 'block'; 
+    Lost.style.display = 'none'; 
   });
   volverMenu.addEventListener('click', () => { 
     game.style.display = 'none'; 
     menu.style.display = 'block'; 
+    Lost.style.display = 'none'; 
   });
   resetButton.addEventListener('click', () => {
    resetGame(); 
@@ -57,7 +61,7 @@ function resetGame(){
   function createBoard(){
       const bombsArray = Array(bombAmount).fill('bomb'); 
       console.log(bombsArray);
-      const emptyArray = Array(width*width - bombAmount).fill('valid');
+      const emptyArray = Array(filas*columnas- bombAmount).fill('valid');
       const gameArray = emptyArray.concat(bombsArray); // Concatenando los dos arreglos
       const shuffledArray = gameArray.sort(()=> Math.random() - 0.5) // Haciéndolo aleatorio
 
@@ -202,12 +206,11 @@ function resetGame(){
           }
       },15)
   }
-
-  // Función del Game Over :0
   function gameOver(){
       console.log('Terminó el juego C:');
       isGameOver=true;
-stopTimer(); 
+      stopTimer(); 
+      Lost.style.display = 'block'; 
       squares.forEach(square => {
           if (square.classList.contains('bomb')){
               square.innerHTML = '💣';
