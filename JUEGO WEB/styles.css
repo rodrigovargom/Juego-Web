@@ -1,30 +1,18 @@
-* {
-    margin: 0;
-    padding: 0;
-  }
-
-  .contenedor {
-    display: grid;
-    grid-template-rows: repeat(10, 50px);
-    grid-template-columns: repeat(10, 50px);
-    justify-content: center;
-  }
-
-  .celda {
-    width: 50px;
-    height: 50px;
-    border: 1px solid gray;
-    display: flex;
-    justify-content: center;
-    /* Centrar horizontalmente */
-    align-items: center;
-    font-size: 25px;
-  }
-
-  .gris {
-    background-color: lightgray;
-  }
-
-  .verde {
-    background-color: green;
-  }
+.tablero {
+  display: flex;
+  margin: 20px;
+}
+.celda {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #333;
+  background-color: #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  cursor: pointer;
+}
+.celda:hover {
+  background-color: #bbb;
+}
