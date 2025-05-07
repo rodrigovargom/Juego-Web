@@ -1,53 +1,90 @@
-// Se hace de la siguiente manera para saber que todo el HTML se lee antes de leer el código
+let time;
+let timerInterval;
+
+
+document.addEventListener('DOMContentLoaded', ()=>{
+    const timerElement = document.querySelector('#timer');
+    if (!timerElement) {
+        console.error('El elemento #timer no se encuentra en el DOM.');
+        return;
+      }
 function startTimer() {
-  timerInterval = setInterval(() => {
-      time++;
-      timerElement.textContent = `Tiempo: ${time}`;
-  }, 1000);
+    time = 0; 
+    timerInterval = setInterval(() => {
+        time+=1;
+        timerElement.textContent = `Tiempo: ${time}`; // Actualiza el tiempo en el DOM
+      }, 1000);
 }
 function stopTimer() {
   clearInterval(timerInterval);
 }
-document.addEventListener('DOMContentLoaded', ()=>{
+function resetGame(){
+    grid.innerHTML = ''; 
+    squares = [];
+    isGameOver = false;
+    createBoard();
+    startTimer(); // Reinicia el temporizador
+}
   const grid = document.querySelector('.grid');
   let width = 10;
+  let filas=10;
+  let columnas=10;    
   let bombAmount = 20;  
   let flags = 0;
   let squares = [];
   let isGameOver = false;
-
-  // Creando el tablero 
+  playButton.addEventListener('click', () => {
+    menu.style.display = 'none'; 
+    game.style.display = 'block'; 
+    createBoard();
+    resetGame(); // Crea el tablero
+  });
+  optionsButton.addEventListener('click', () => {
+    menu.style.display = 'none'; 
+    options.style.display = 'block'; 
+  });
+  volverButton.addEventListener('click', () => {
+    options.style.display = 'none'; 
+    menu.style.display = 'block'; 
+  });
+  volverMenu.addEventListener('click', () => { 
+    game.style.display = 'none'; 
+    menu.style.display = 'block'; 
+  });
+  resetButton.addEventListener('click', () => {
+   resetGame(); 
+  });
   function createBoard(){
-      // Creando un arreglo de bombas que se pongan aleatoriamente.
-      const bombsArray = Array(bombAmount).fill('bomb'); // Con el método Array estamos creando un array del tamaño del numero de bombas, y llenamos cada índice con la cadena de 'bomb'
+      const bombsArray = Array(bombAmount).fill('bomb'); 
       console.log(bombsArray);
       const emptyArray = Array(width*width - bombAmount).fill('valid');
       const gameArray = emptyArray.concat(bombsArray); // Concatenando los dos arreglos
       const shuffledArray = gameArray.sort(()=> Math.random() - 0.5) // Haciéndolo aleatorio
 
-      for(let i=0;  i< width*width; i++){
-          const square = document.createElement('div');
-          square.setAttribute('id',i);
-          square.classList.add(shuffledArray[i]);
-          grid.appendChild(square);
-          squares.push(square);
+      for(let i=0;  i< filas; i++){
+        for(let j = 0; j < columnas; j++){
+            const square = document.createElement('div');
+            const index = i * columnas + j; // Calcular el índice correcto en el arreglo mezclado
+            square.setAttribute('id', `${i}-${j}`); // Usar un ID único basado en fila y columna
+            square.classList.add(shuffledArray[index]); // Asignar clase según el arreglo mezclado
+            grid.appendChild(square); // Agregar la celda al tablero
+            squares.push(square); 
           // Normal click
           square.addEventListener('click', function(e){
               click(square)
           })
           // control y click  izquierdo
           square.oncontextmenu = function(e){
-              // Asigna una función al evento de clic derecho en la casilla.
-              e.preventDefault(); // Evita que se muestre el menú contextual predeterminado del navegador al hacer clic derecho.
-              addFlag(square); // Llama a la función `addFlag` y le pasa la casilla como argumento, para manejar la colocación y eliminación de banderas en la casilla.
+              e.preventDefault(); 
+              addFlag(square); 
           }
+        }
       }
-      // Añadiendo números
       for (let i = 0; i<squares.length; i++){
           let total = 0;
           const isLeftEdge = (i%width === 0); // Para verificar los bordes
           const isRightEdge = (i%width === width -1);
-          if (squares[i].classList.contains('valid')){ // Osea si no es una bomba
+          if (squares[i].classList.contains('valid')){ 
               //Checa a la izquierda de la casilla 
               if(i>0 && !isLeftEdge && squares[i-1].classList.contains('bomb')) 
                   total++;
@@ -78,7 +115,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
   }
 
   createBoard();
-
   // Añadir las banderas con el click derecho
   function addFlag(square){
       if (isGameOver) return;
@@ -198,13 +234,3 @@ stopTimer();
 
 
 })
-document.addEventListener('DOMContentLoaded', () => {
-  const resetButton = document.getElementById('resetButton');
-  resetButton.addEventListener('click', () => {
-      // Recargar la página para reiniciar el juego
-      location.reload();
-  });
-
-  // ...existing code...
-});
-startTimer(); // Iniciar el temporizador al cargar la página
