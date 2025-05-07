@@ -1,18 +1,57 @@
-.tablero {
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
   display: flex;
-  margin: 20px;
-}
-.celda {
-  width: 40px;
-  height: 40px;
-  border: 1px solid #333;
-  background-color: #ccc;
-  display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+.grid {
+  height: 400px;
+  width: 400px;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 2px;
+}
+
+.grid div {
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #eee;
+  font-size: 18px;
   font-weight: bold;
   cursor: pointer;
+  user-select: none;
+  border: 1px solid #ddd;
 }
-.celda:hover {
-  background-color: #bbb;
+
+.grid div.checked {
+  background-color: #c1c1c1;
+}
+
+.grid div.flag {
+  background-color: #ddd;
+}
+
+.bomb {
+  background-color: #ffcc00;
+  color: #fff;
+}
+
+h1 {
+  color: #333;
+}
+button {
+  margin-top: 50px;
+  padding: 8px 18px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
