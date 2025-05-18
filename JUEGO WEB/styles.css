@@ -8,6 +8,7 @@ body {
   height: 100vh;
 }
 .grid {
+  align-items: center;
   height: 400px;
   width: 400px;
   display: grid;
@@ -46,11 +47,16 @@ body {
 }
 
 h1 {
+  position: absolute;
+  top: 20px; /* Ajusta según el espacio que desees desde la parte superior */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 50px;
   color: #333;
+  text-align: center;
 }
 button {
-  margin-top: 100px;
-  padding: 8px 18px;
+  padding: 10px 45px;
   font-size: 16px;
   background-color: #007bff;
   color: white;
@@ -73,11 +79,92 @@ h1 {
   color: #333;
 }
 button {
-  padding: 10px 20px;
-  margin: 10px;
+  align-self: top;
+
   font-size: 16px;
   cursor: pointer;
 }
 button:hover {
   background-color: #0056b3;
+}
+#resetButton, #volverMenu {
+  margin-top: 200px; 
+}
+#timer {
+  font-size: 24px;
+  margin-top: 20px;
+}
+#optionsForm {
+  margin-top: 20px;
+  text-align: center;
+}
+
+#optionsForm label {
+  margin-right: 10px;
+}
+
+#optionsForm input {
+  margin-bottom: 10px;
+  padding: 5px;
+  width: 50px;
+  text-align: center;
+}
+#game button {
+  display: block;
+  margin: 30px auto 0 auto; /* Separación superior y centrado */
+}
+
+#game {
+  margin-top: 20px;
+  text-align: center;
+  position: relative;
+}
+
+.grid {
+  margin-bottom: 200px; /* Espacio entre el tablero y los botones */
+}
+#flagsLeft {
+  font-size: 22px;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 15px;
+  margin-top: 10px;
+  text-align: center;
+}
+#winPanel {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+#winPanel .win-content {
+  background: #fff;
+  padding: 32px 24px;
+  border-radius: 12px;
+  box-shadow: 0 0 24px rgba(0,0,0,0.3);
+  text-align: center;
+  min-width: 280px;
+}
+
+#winPanel input[type="text"] {
+  width: 90%;
+  padding: 8px;
+  margin: 16px 0 12px 0;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+#winPanel button {
+  padding: 10px 30px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }

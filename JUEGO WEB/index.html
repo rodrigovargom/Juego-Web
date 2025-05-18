@@ -4,27 +4,150 @@
 <head>
   <meta charset="UTF-8">
   <link rel="stylesheet" href="styles.css">
-  <script src="Js/buscaminas.js" charset="UTF-8"></script>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Buscaminas</title>
+  <script type="module"> 
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-analytics.js";
+ import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-database.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+ const firebaseConfig = {
+  apiKey: "AIzaSyBLz1zk-NFYXm6sb-VZ9yRWleSl9TNGdsQ",
+  authDomain: "buscaminas-7e78f.firebaseapp.com",
+  databaseURL: "https://buscaminas-7e78f-default-rtdb.firebaseio.com",
+  projectId: "buscaminas-7e78f",
+  storageBucket: "buscaminas-7e78f.firebasestorage.app",
+  messagingSenderId: "564978513481",
+  appId: "1:564978513481:web:de261a0a75a3d9cfcff198",
+  measurementId: "G-V7YZDNW40D"
+};
 
+  // Initialize Firebase
+ var app = initializeApp(firebaseConfig);
+        var analytics = getAnalytics(app);
+
+        var db = getDatabase(app);
+        var highscoresRef = ref(db, 'Highscores');
+
+        // Store a highscore
+        function storeHighscore(playerName, time) {
+            push(highscoresRef, {
+                Nombre: playerName,
+                Times: time
+            });
+
+        }
+
+        // To be able to call it from anywhere
+        window.storeHighscore = storeHighscore;
+
+        import { query, orderByChild, limitToLast, onValue } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-database.js";
+
+        function loadTopHighscores(callback) {
+            const topScoresQuery = query(highscoresRef, orderByChild("Times"), limitToLast(5));
+
+            onValue(topScoresQuery, (snapshot) => {
+                const data = snapshot.val();
+                if (!data) {
+                callback([]);
+                return;
+                }
+                // Convert the object to an array and sort it descending (Firebase returns ascending)
+                const highscores = Object.values(data).sort((a, b) => b.Times - a.Times);
+                callback(highscores);
+            });
+        }
+        window.loadTopHighscores = loadTopHighscores;
+        </script>
 </head>
 
 <body>
+  <div id="options" style="display: none;">
+  <h2>Opciones</h2>
+  <form id="optionsForm">
+    <label for="filasInput">Filas:</label>
+    <input type="number" id="filasInput" min="5" max="12" value="10">
+    <br>
+    <label for="columnasInput">Columnas:</label>
+    <input type="number" id="columnasInput" min="5" max="12" value="8">
+    <br>
+    <button type="button" id="applyOptionsButton">Aplicar</button>
+  </form>
+  <button id="volverButton2">Volver</button>
+</div>
+    <div id="leaderboardPanel" style="display:none;">
+        <h2>Leaderboard</h2>
+        <div id="highscoreList">
+        </div>
+        <button id="backToMainMenu">Volver al menú principal</button>
+</div>
   <h1 id="Lost"style="display: none;">Has perdido </h1>
+  <h1 id="Win"style="display: none;">Enhorabuena</h1>
   <div id="menu">
     <h1>Buscaminas</h1>
+    <button id="leaderboard">Leaderboard</button>
     <button id="playButton">Jugar</button>
     <button id="optionsButton">Opciones</button>
-    <div id="options" style="display: none;">
+    <div id="option" style="display: none;">
     <button id="volverButton">Volver</button>
   </div>
-  </div>
+</div>
   <div id="game" style="display: none;">
+    <div id="flagsLeft"></div>
   <div id="timer">Tiempo: 0</div>
   <div align="center" class="grid"></div>
-  <button id="resetButton">Reiniciar Juego</button>
+  <!-- Agrega esto justo después del tablero en tu HTML principal -->
+<div id="winPanel" style="display:none;">
+  <div class="win-content">
+    <h2>¡Has ganado!</h2>
+    <input type="text" id="playerName" placeholder="Tu nombre">
+    <button id="submitWinScore">Guardar puntuación</button>
+    <button id="resumeButton">Volver</button>
+  </div>
+</div>
+  <button id="resetButton">Reiniciar Juego</button> 
   <button id="volverMenu">Volver al menu</button>
 </div>
+  <script src="Js/particlesystem.js" charset="UTF-8"></script>
+  <script src="Js/buscaminas.js" charset="UTF-8"></script>
+    <script src="Js/utils.js" charset="UTF-8"></script>
+  <script>
+  const leaderboardButton = document.getElementById("leaderboard");
+    const leaderboardPanel = document.getElementById("leaderboardPanel");
+    const highscoreList = document.getElementById("highscoreList");
+    const backToMainMenuButton = document.getElementById("backToMainMenu");
+
+    leaderboard.addEventListener("click", () => {
+      menu.style.display = "none";
+      leaderboardPanel.style.display = "block";
+
+      highscoreList.innerHTML = "<p>Loading...</p>";
+      if (typeof loadTopHighscores === "function") {
+        loadTopHighscores((scores) => {
+          if (scores.length === 0) {
+            highscoreList.innerHTML = "<p>No highscores yet.</p>";
+            return;
+          }
+
+          const list = document.createElement("ol");
+          scores.forEach(score => {
+            const item = document.createElement("li");
+            item.textContent = `${score.Nombre}: ${score.Times}`;
+            list.appendChild(item);
+          });
+          highscoreList.innerHTML = "";
+          highscoreList.appendChild(list);
+        });
+      } else {
+        //console.error("loadTopHighscores function not found");
+        highscoreList.innerHTML = "<p>Error loading scores.</p>";
+      }
+    });
+
+    backToMainMenuButton.addEventListener("click", () => {
+      leaderboardPanel.style.display = "none";
+      menu.style.display = "block";
+    });</script>
 </body>
